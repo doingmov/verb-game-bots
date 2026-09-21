@@ -26,7 +26,7 @@
 ## Попробовать ботов
 
 - Telegram: [Мой telegram bot](https://t.me/verb_gamee_support_bot)
-- ВКонтакте: [Мое сообщество вк]https://vk.ru/club241646134
+- ВКонтакте: [Мое сообщество вк](https://vk.ru/club241646134)
 
 ## Как запустить локально
 
