@@ -1,3 +1,10 @@
 .env
 venv/
+.venv/
 __pycache__/
+.idea/
+.vscode/
+
+# ключи Google
+credentials.json
+application_default_credentials.json
