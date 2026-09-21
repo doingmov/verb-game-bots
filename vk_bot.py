@@ -6,6 +6,9 @@ from dotenv import load_dotenv
 from vk_api.longpoll import Event, VkEventType, VkLongPoll
 
 from dialogflow_client import detect_intent
+from logs_handler import TelegramLogsHandler
+
+logger = logging.getLogger('vk_bot')
 
 
 def reply_with_dialogflow(event: Event, vk_client, project_id: str) -> None:
@@ -26,15 +29,33 @@ def reply_with_dialogflow(event: Event, vk_client, project_id: str) -> None:
 
 def main() -> None:
     load_dotenv()
-    project_id = os.environ['DIALOGFLOW_PROJECT_ID']
 
-    vk_session = vk_api.VkApi(token=os.environ['VK_GROUP_TOKEN'])
-    vk_client = vk_session.get_api()
-    longpoll = VkLongPoll(vk_session)
+    logging.basicConfig(
+        format='%(asctime)s %(name)s %(levelname)s: %(message)s',
+        level=logging.INFO,
+        )
+    logger.addHandler(
+        TelegramLogsHandler(
+            os.environ['LOGS_BOT_TOKEN'],
+            os.environ['LOGS_CHAT_ID'],
+            )
+        )
 
-    for event in longpoll.listen():
-        if event.type == VkEventType.MESSAGE_NEW and event.to_me:
-            reply_with_dialogflow(event, vk_client, project_id)
+    try:
+
+        project_id = os.environ['DIALOGFLOW_PROJECT_ID']
+
+        vk_session = vk_api.VkApi(token=os.environ['VK_GROUP_TOKEN'])
+        vk_client = vk_session.get_api()
+        longpoll = VkLongPoll(vk_session)
+
+        logger.info('Бот VK запущен')
+        for event in longpoll.listen():
+            if event.type == VkEventType.MESSAGE_NEW and event.to_me:
+                reply_with_dialogflow(event, vk_client, project_id)
+    except Exception:
+        logger.exception('Бот VK упал')
+        raise
 
 
 if __name__ == '__main__':

@@ -3,3 +3,4 @@ python-dotenv
 setuptools<81
 google-cloud-dialogflow
 vk_api
+requests
