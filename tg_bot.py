@@ -13,7 +13,7 @@ def start(update: Update, context: CallbackContext) -> None:
 
 
 def reply_with_dialogflow(update: Update, context: CallbackContext) -> None:
-    answer = detect_intent(
+    answer, _ = detect_intent(
         project_id=context.bot_data['project_id'],
         session_id=str(update.effective_user.id),
         text=update.message.text,

@@ -9,11 +9,14 @@ from dialogflow_client import detect_intent
 
 
 def reply_with_dialogflow(event: Event, vk_client, project_id: str) -> None:
-    answer = detect_intent(
+    answer, is_fallback = detect_intent(
         project_id=project_id,
         session_id=f'vk-{event.user_id}',
         text=event.text,
     )
+    if is_fallback:
+        return
+    
     vk_client.messages.send(
         user_id=event.user_id,
         message=answer,

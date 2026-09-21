@@ -6,7 +6,7 @@ def detect_intent(
     session_id: str,
     text: str,
     language_code: str = 'ru',
-) -> str:
+) -> tuple[str, bool]:
     session_client = dialogflow.SessionsClient()
     session = session_client.session_path(project_id, session_id)
 
@@ -16,4 +16,5 @@ def detect_intent(
     response = session_client.detect_intent(
         request={'session': session, 'query_input': query_input}
     )
-    return response.query_result.fulfillment_text
+    query_result = response.query_result
+    return response.query_result.fulfillment_text, query_result.intent.is_fallback
